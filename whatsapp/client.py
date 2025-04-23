@@ -2,8 +2,35 @@ import requests
 import json
 from typing import Dict, Any, List, Optional, Callable
 import asyncio
-from config.config import WHATSAPP_API_BASE_URL
+import google.generativeai as genai
+from config.config import WHATSAPP_API_BASE_URL, GEMINI_API_KEY
 from database.queries import ChatHistoryQueries
+
+class GeminiHandler:
+    """Handler for Gemini AI responses."""
+
+    def __init__(self):
+        genai.configure(api_key=GEMINI_API_KEY)
+        self.model = genai.GenerativeModel('gemini-2.0-flash')
+
+    async def __call__(self, chat_id: str, message: str) -> str:
+        """Generate AI response using Gemini.
+
+        Args:
+            chat_id: Chat ID
+            message: User message
+
+        Returns:
+            Generated response
+        """
+        try:
+            response = await self.model.generate_content_async(message)
+            return response.text
+        except Exception as e:
+            import logging
+            logging.error(f"Error generating Gemini response: {e}", exc_info=True)
+            return "Sorry, I'm having trouble generating a response right now."
+
 
 class WhatsAppClient:
     """Client for interacting with WhatsApp MCP server."""
@@ -16,6 +43,7 @@ class WhatsAppClient:
         """
         self.api_base_url = api_base_url
         self.message_handlers: List[Callable] = []
+        self.register_message_handler(GeminiHandler())
     
     def register_message_handler(self, handler: Callable):
         """Register a function to handle incoming messages.
