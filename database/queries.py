@@ -218,7 +218,8 @@ class ChatHistoryQueries:
                 return f"User has expressed interest in diamonds with: {result}"
             return "No specific interests detected yet."
         except Exception as e:
-            print(f"Error generating conversation summary: {e}")
+            import logging
+            logging.error(f"Error generating conversation summary: {e}", exc_info=True)
             return "Unable to generate conversation summary."
         finally:
             await supabase_client.close_postgres()
