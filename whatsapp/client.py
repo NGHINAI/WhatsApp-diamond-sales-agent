@@ -46,7 +46,8 @@ class WhatsAppClient:
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
-            print(f"Error sending WhatsApp message: {e}")
+            import logging
+            logging.error(f"Error sending WhatsApp message: {e}", exc_info=True)
             return {"error": str(e)}
     
     async def listen_for_messages(self, polling_interval: int = 5):
@@ -99,10 +100,12 @@ class WhatsAppClient:
                                         agent_response=response
                                     )
                             except Exception as e:
-                                print(f"Error in message handler: {e}")
+                                import logging
+                                logging.error(f"Error in message handler: {e}", exc_info=True)
             
             except Exception as e:
-                print(f"Error polling for WhatsApp messages: {e}")
+                import logging
+                logging.error(f"Error polling for WhatsApp messages: {e}", exc_info=True)
             
             # Wait before polling again
             await asyncio.sleep(polling_interval)
@@ -124,7 +127,8 @@ class WhatsAppClient:
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
-            print(f"Error getting chat info: {e}")
+            import logging
+            logging.error(f"Error getting chat info: {e}", exc_info=True)
             return None
 
 # Singleton instance
