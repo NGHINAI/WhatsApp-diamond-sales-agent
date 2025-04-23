@@ -153,6 +153,9 @@ class DiamondSalesAgent:
                     state.customer_preferences.update(result)
             
             except Exception as e:
+                # Log the error instead of appending to tool_results
+                import logging
+                logging.error(f"Exception in tool execution: {e}", exc_info=True)
                 tool_results.append({"error": str(e)})
         
         # Generate a response based on tool results
