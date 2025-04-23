@@ -70,7 +70,11 @@ class WhatsAppClient:
         }
         
         try:
-            response = requests.post(endpoint, json=payload)
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None, 
+                lambda: requests.post(endpoint, json=payload)
+            )
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
@@ -95,7 +99,11 @@ class WhatsAppClient:
                 if last_message_id:
                     params["after_id"] = last_message_id
                 
-                response = requests.get(endpoint, params=params)
+                loop = asyncio.get_event_loop()
+                response = await loop.run_in_executor(
+                    None, 
+                    lambda: requests.get(endpoint, params=params)
+                )
                 response.raise_for_status()
                 messages = response.json().get("messages", [])
                 
@@ -151,7 +159,11 @@ class WhatsAppClient:
         params = {"chat_id": chat_id}
         
         try:
-            response = requests.get(endpoint, params=params)
+            loop = asyncio.get_event_loop()
+            response = await loop.run_in_executor(
+                None, 
+                lambda: requests.get(endpoint, params=params)
+            )
             response.raise_for_status()
             return response.json()
         except requests.RequestException as e:
