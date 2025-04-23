@@ -16,6 +16,9 @@ CHAT_HISTORY_TABLE = "chat_history"
 # OpenAI configuration
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
+# Gemini configuration
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
 # WhatsApp configuration
 WHATSAPP_API_BASE_URL = "http://localhost:8080"
 
